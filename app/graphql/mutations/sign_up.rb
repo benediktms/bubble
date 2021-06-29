@@ -7,7 +7,9 @@ module Mutations
     argument :password, String, required: true
     argument :password_confirmation, String, required: true
 
-    field :response, Types::SignUpResponseType, null: true
+    field :user, Types::UserType, null: true
+    field :success, Boolean, null: true
+    field :message, String, null: true
 
     def resolve(**args)
       params = Hash(args)
