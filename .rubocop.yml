@@ -6,6 +6,7 @@ AllCops:
     - "vendor/**/*"
     - ".git/**/*"
     - "**/schema.rb"
+    - "db/migrate/*"
     - "**/seeds.rb"
 
 Layout/LineLength:

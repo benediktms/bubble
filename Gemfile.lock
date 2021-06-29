@@ -87,6 +87,11 @@ GEM
     graphql (1.12.12)
     i18n (1.8.10)
       concurrent-ruby (~> 1.0)
+    interactor (3.1.2)
+    interactor-rails (2.2.1)
+      interactor (~> 3.0)
+      rails (>= 4.2)
+    jwt (2.2.3)
     listen (3.5.1)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
@@ -220,6 +225,8 @@ DEPENDENCIES
   dotenv-rails
   graphiql-rails
   graphql
+  interactor-rails
+  jwt
   listen (~> 3.3)
   pg (~> 1.1)
   pry-byebug

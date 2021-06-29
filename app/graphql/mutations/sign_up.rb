@@ -1,31 +1,33 @@
 # frozen_string_literal: true
 
 module Mutations
-  class SignUp < BaseMutation
+  class SignUp < Mutations::BaseMutation
     argument :name, String, required: true
     argument :email, String, required: true
     argument :password, String, required: true
     argument :password_confirmation, String, required: true
 
     field :user, Types::UserType, null: true
-    field :success, Boolean, null: true
+    field :token, String, null: true
     field :message, String, null: true
+    field :errors, [String], null: true
 
     def resolve(**args)
-      params = Hash(args)
+      result = sign_up_user(args)
 
-      begin
-        user = User.create!(params)
-
-        {
-          user: user,
-          success: true,
-          message: 'Sign up successful'
-        }
-      rescue ActiveRecord::RecordInvalid => e
-        GraphQL::ExecutionError.new("Invalid attributes for #{e.record.class}:"\
-          " #{e.record.errors.full_messages.join(', ')}")
+      if result.success?
+        result
+      else
+        result.errors.map do |e|
+          GraphQL::ExecutionError.new(e)
+        end
       end
+    end
+
+    private
+
+    def sign_up_user(params)
+      ::Users::SignUpInteractor.call(attributes: params)
     end
   end
 end
