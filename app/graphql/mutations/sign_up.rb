@@ -7,7 +7,7 @@ module Mutations
     argument :password, String, required: true
     argument :password_confirmation, String, required: true
 
-    field :user, Types::UserType, null: true
+    field :response, Types::SignUpResponseType, null: true
 
     def resolve(**args)
       params = Hash(args)
@@ -15,7 +15,11 @@ module Mutations
       begin
         user = User.create!(params)
 
-        { user: user }
+        {
+          user: user,
+          success: true,
+          message: 'Sign up successful'
+        }
       rescue ActiveRecord::RecordInvalid => e
         GraphQL::ExecutionError.new("Invalid attributes for #{e.record.class}:"\
           " #{e.record.errors.full_messages.join(', ')}")
