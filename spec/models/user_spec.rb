@@ -3,13 +3,10 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
-  user = User.create({
-                       email: 'test@example.com',
-                       password: 'password123',
-                       password_confirmation: 'password123'
-                     })
-
-  it('should correctly create a user') do
-    expect(user).to be_instance_of(User)
+  describe('validations') do
+    it { should validate_presence_of(:email) }
+    it { should validate_uniqueness_of(:email) }
+    it { should validate_presence_of(:name) }
+    it { should have_secure_password }
   end
 end
