@@ -1,16 +1,18 @@
 # frozen_string_literal: true
 
+require_relative '../concerns/execution_error_responder'
+
 module Mutations
   class SignUp < Mutations::BaseMutation
+    include ExecutionErrorResponder
+
     argument :name, String, required: true
     argument :email, String, required: true
     argument :password, String, required: true
     argument :password_confirmation, String, required: true
 
     field :user, Types::UserType, null: true
-    field :token, String, null: true
     field :message, String, null: true
-    field :errors, [String], null: true
 
     def resolve(**args)
       result = sign_up_user(args)
@@ -18,8 +20,8 @@ module Mutations
       if result.success?
         result
       else
-        result.errors.map do |e|
-          GraphQL::ExecutionError.new(e)
+        result.error.map do |e|
+          execution_error(e)
         end
       end
     end
