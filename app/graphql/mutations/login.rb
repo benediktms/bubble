@@ -16,6 +16,8 @@ module Mutations
       result = login_user(email, password)
 
       if result.success?
+        context[:session][:token] = result.user.token
+
         result
       else
         result.errors.map do |e|

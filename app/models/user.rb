@@ -23,6 +23,6 @@ class User < ApplicationRecord
     payload = { id: id, exp: 30.days.from_now.to_i }
     hmac_secret = Rails.application.secrets.secret_key_base
 
-    JWT.encode(payload, hmac_secret)
+    JWT.encode(payload, hmac_secret, 'HS256')
   end
 end
