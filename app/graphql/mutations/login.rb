@@ -20,9 +20,7 @@ module Mutations
 
         result
       else
-        result.errors.map do |e|
-          execution_error(e)
-        end
+        execution_error(result.error, :unauthorized, 401)
       end
     end
 
