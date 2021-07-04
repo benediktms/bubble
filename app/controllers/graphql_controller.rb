@@ -11,8 +11,8 @@ class GraphqlController < ApplicationController
     query = params[:query]
     operation_name = params[:operationName]
     context = {
-      # Query context goes here, for example:
-      # current_user: current_user,
+      session: session,
+      current_user: current_user
     }
     result = BubbleSchema.execute(query, variables: variables,
                                          context: context,
@@ -25,6 +25,21 @@ class GraphqlController < ApplicationController
   end
 
   private
+
+  def current_user
+    return unless session[:token]
+
+    hmac_secret = Rails.application.secrets.secret_key_base
+
+    token = JWT.decode(session[:token],
+                       hmac_secret,
+                       true,
+                       { algorithm: 'HS256' })
+
+    user_id = token.first[:id].to_i
+
+    user.find(user_id)
+  end
 
   # Handle variables in form data, JSON body, or a blank value
   def prepare_variables(variables_param)

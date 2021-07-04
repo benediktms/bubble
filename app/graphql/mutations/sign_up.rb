@@ -11,8 +11,8 @@ module Mutations
     argument :password, String, required: true
     argument :password_confirmation, String, required: true
 
-    field :user, Types::UserType, null: true
-    field :message, String, null: true
+    field :user, Types::UserType, null: false
+    field :message, String, null: false
 
     def resolve(**args)
       result = sign_up_user(args)
@@ -20,7 +20,7 @@ module Mutations
       if result.success?
         result
       else
-        result.error.map do |e|
+        result.errors.map do |e|
           execution_error(e)
         end
       end
